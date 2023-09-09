@@ -20,3 +20,4 @@ def read_inventory(filename):
             inv.append(row)
 
     return inv
+
