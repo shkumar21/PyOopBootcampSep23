@@ -8,5 +8,5 @@ class Product:
     return self.quant*self.price
   def sell(self, nunits):
      self.quant-=nunits
-  #inventory = Product(pr_dict['name'], pr_dict['quant'], pr_dict['price'])
+
   

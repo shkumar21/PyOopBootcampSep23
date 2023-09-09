@@ -38,8 +38,8 @@ def make_report(inventory, prices):
     for prod in inventory:
         name = prod.name
         quant = prod.quant
-        latest_price = prices.price
-        change = latest_price - prod['price']
+        latest_price = prices[name]
+        change = latest_price - prod.price
         report.append( (name, quant, latest_price, change) )
 
     return report
@@ -65,10 +65,12 @@ def inventory_report(inventory_file, prices_file):
 def main():
     import sys
     if len(sys.argv) != 3:
-        raise SystemExit(f'Usage: {sys.argv[0]} invfile pricesfile')
-
-    inv_file = sys.argv[1]
-    prices_file = sys.argv[2]
+        inv_file = 'Data/inventory.csv'
+        prices_file = 'Data/prices.csv'
+        #raise SystemExit(f'Usage: {sys.argv[0]} invfile pricesfile')
+    else:
+        inv_file = sys.argv[1]
+        prices_file = sys.argv[2]
     inventory_report(inv_file, prices_file)
 
 # Main starts from here
