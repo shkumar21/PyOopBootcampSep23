@@ -4,7 +4,7 @@ def receipt(filename):
     inv = read_inventory(filename)
     total = 0
     for prod in inv:
-        cost = prod['quant']*prod['price']
+        cost = prod.quant*prod.price
         total = total + cost
     return total
 

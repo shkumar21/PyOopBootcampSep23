@@ -4,6 +4,7 @@
 
 import csv
 import fileparse as fp
+from product import Product
 
 def read_prices(filename:str) -> dict:
     '''
@@ -19,21 +20,29 @@ def read_inventory(filename):
         Reads a csv file
         Returns a list of tuples [ for each row ]
     '''
-    return fp.parse_csv(filename, 
+    
+    inv = fp.parse_csv(filename, 
                  select=['name', 'quant', 'price'],
                  types=[str, int, float])
+
+    inventory = [Product(pr_dict['name'], pr_dict['quant'], pr_dict['price'])
+                    for pr_dict in inv ]
+    return inventory
+
+    # convert inv .. which is a list of dictionaries
+    # to a list of Product instances
+    # Return that list of Product instances
 
 def make_report(inventory, prices):
     report = list()
     for prod in inventory:
-        name = prod['name']
-        quant = prod['quant']
-        latest_price = prices[name]
+        name = prod.name
+        quant = prod.quant
+        latest_price = prices.price
         change = latest_price - prod['price']
         report.append( (name, quant, latest_price, change) )
 
     return report
-
 
 def print_report(report):
     headers = ('Name', 'Quantity', 'Price', 'Change')
