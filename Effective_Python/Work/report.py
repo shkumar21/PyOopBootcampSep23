@@ -3,6 +3,15 @@
 '''
 
 import csv
+import fileparse as fp
+
+def read_prices(filename:str) -> dict:
+    '''
+        Reads a prices csv file
+        Returns a dictionary with value for each product
+    '''
+    inv_list = fp.parse_csv(filename, types=[str, float], has_headers=False)
+    return dict(inv_list)
 
 #def read_inventory(filename: str) -> list[tuple]:
 def read_inventory(filename):
@@ -10,14 +19,49 @@ def read_inventory(filename):
         Reads a csv file
         Returns a list of tuples [ for each row ]
     '''
-    inv = list()
-    with open(filename) as FH:
-        data = csv.reader(FH)
-        headers = next(data)
+    return fp.parse_csv(filename, 
+                 select=['name', 'quant', 'price'],
+                 types=[str, int, float])
 
-        for row in data:
-            row = (row[0], int(row[1]), float(row[2]))
-            inv.append(row)
+def make_report(inventory, prices):
+    report = list()
+    for prod in inventory:
+        name = prod['name']
+        quant = prod['quant']
+        latest_price = prices[name]
+        change = latest_price - prod['price']
+        report.append( (name, quant, latest_price, change) )
 
-    return inv
+    return report
 
+
+def print_report(report):
+    headers = ('Name', 'Quantity', 'Price', 'Change')
+    print('%10s %10s %10s %10s' % headers)
+
+    dashes = tuple(['-' * 10] * 4)
+    print('%10s %10s %10s %10s' % dashes)
+
+    for r in report:
+        print('%10s %10d %10.2f %10.2f' % r)
+
+
+def inventory_report(inventory_file, prices_file):
+    inventory = read_inventory(inventory_file)
+    prices = read_prices(prices_file)
+    report = make_report(inventory, prices)
+    print_report(report)
+
+
+def main():
+    import sys
+    if len(sys.argv) != 3:
+        raise SystemExit(f'Usage: {sys.argv[0]} invfile pricesfile')
+
+    inv_file = sys.argv[1]
+    prices_file = sys.argv[2]
+    inventory_report(inv_file, prices_file)
+
+# Main starts from here
+if __name__ == "__main__":
+    main()
