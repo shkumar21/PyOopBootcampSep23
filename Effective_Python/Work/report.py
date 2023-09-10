@@ -5,7 +5,7 @@
 import csv
 import fileparse as fp
 from product import Product
-from tableformat import TableFormatter
+from tableformat import (TableFormatter,TextTableFormatter, CSVTableFormatter, HTMLTableFormatter)
 
 def read_prices(filename:str) -> dict:
     '''
@@ -58,12 +58,23 @@ def print_report(report, formatter):
         formatter.row(rowdata)
 
 
-def inventory_report(inventory_file, prices_file):
+def inventory_report(inventory_file, prices_file, fmt='txt'):
     inventory = read_inventory(inventory_file)
     prices = read_prices(prices_file)
     report = make_report(inventory, prices)
 
-    formatter = TableFormatter()
+    if fmt == 'txt':
+        formatter = TextTableFormatter()
+    elif fmt == 'csv':
+        formatter = CSVTableFormatter()
+    elif fmt == 'html':
+        formatter = HTMLTableFormatter()
+    else:
+        raise RuntimeError(f'Unknown error: {fmt}')
+    #formatter = TableFormatter()
+    #formatter = TextTableFormatter()
+    #formatter = CSVTableFormatter()
+    #formatter = HTMLTableFormatter()
     print_report(report, formatter)
 
 
