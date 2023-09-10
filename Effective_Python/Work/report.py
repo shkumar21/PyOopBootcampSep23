@@ -6,6 +6,7 @@ import csv
 import fileparse as fp
 from product import Product
 from tableformat import (TableFormatter,TextTableFormatter, CSVTableFormatter, HTMLTableFormatter)
+from tableformat import create_formatter
 
 def read_prices(filename:str) -> dict:
     '''
@@ -63,31 +64,28 @@ def inventory_report(inventory_file, prices_file, fmt='txt'):
     prices = read_prices(prices_file)
     report = make_report(inventory, prices)
 
-    if fmt == 'txt':
-        formatter = TextTableFormatter()
-    elif fmt == 'csv':
-        formatter = CSVTableFormatter()
-    elif fmt == 'html':
-        formatter = HTMLTableFormatter()
-    else:
-        raise RuntimeError(f'Unknown error: {fmt}')
+
     #formatter = TableFormatter()
     #formatter = TextTableFormatter()
     #formatter = CSVTableFormatter()
     #formatter = HTMLTableFormatter()
+    formatter = create_formatter(fmt)
     print_report(report, formatter)
 
 
 def main():
     import sys
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 4:
         inv_file = 'Data/inventory.csv'
         prices_file = 'Data/prices.csv'
-        #raise SystemExit(f'Usage: {sys.argv[0]} invfile pricesfile')
+        fmt = 'txt'
+        #raise SystemExit(f'Usage: {sys.argv[0]} invfile pricesfile fmt')
     else:
         inv_file = sys.argv[1]
         prices_file = sys.argv[2]
-    inventory_report(inv_file, prices_file)
+        fmt = sys.argv[3]
+        
+    inventory_report(inv_file, prices_file, fmt)
 
 # Main starts from here
 if __name__ == "__main__":
