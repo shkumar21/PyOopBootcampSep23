@@ -7,6 +7,7 @@ import fileparse as fp
 from product import Product
 from tableformat import (TableFormatter,TextTableFormatter, CSVTableFormatter, HTMLTableFormatter)
 from tableformat import create_formatter
+from tableformat import FormatError
 
 def read_prices(filename:str) -> dict:
     '''
@@ -69,8 +70,13 @@ def inventory_report(inventory_file, prices_file, fmt='txt'):
     #formatter = TextTableFormatter()
     #formatter = CSVTableFormatter()
     #formatter = HTMLTableFormatter()
-    formatter = create_formatter(fmt)
-    print_report(report, formatter)
+    try:
+        formatter = create_formatter(fmt)
+        #print_report(report, formatter)
+    except FormatError as e:
+        print('********+Falling back to Text formate********')
+        formatter = create_formatter('txt')
+        exit()
 
 
 def main():

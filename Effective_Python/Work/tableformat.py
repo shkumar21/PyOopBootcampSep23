@@ -8,9 +8,13 @@ def create_formatter(name):
     elif name == 'html':
         formatter = HTMLTableFormatter()
     else:
-        raise RuntimeError(f'Unknown error: {name}')
+        #raise RuntimeError(f'Unknown error: {name}')
+        raise FormatError(f'Unknown error: {name}')
     
     return formatter
+
+class FormatError(Exception):
+    pass
 
 class TableFormatter(ABC):
     @abstractclassmethod
