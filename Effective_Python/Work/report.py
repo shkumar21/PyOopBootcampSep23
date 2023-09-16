@@ -8,6 +8,7 @@ from product import Product
 from tableformat import (TableFormatter,TextTableFormatter, CSVTableFormatter, HTMLTableFormatter)
 from tableformat import create_formatter
 from tableformat import FormatError
+from inventor import inventory
 
 def read_prices(filename:str) -> dict:
     '''
@@ -28,9 +29,9 @@ def read_inventory(filename):
                  select=['name', 'quant', 'price'],
                  types=[str, int, float])
 
-    inventory = [Product(pr_dict['name'], pr_dict['quant'], pr_dict['price'])
+    inventory_list = [Product(pr_dict['name'], pr_dict['quant'], pr_dict['price'])
                     for pr_dict in inv ]
-    return inventory
+    return inventory(inventory_list)
 
     # convert inv .. which is a list of dictionaries
     # to a list of Product instances
